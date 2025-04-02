@@ -1,0 +1,40 @@
+@back hallway
+@char Nika
+
+@char Nika.Smile
+Nika: Ah, you must be {playerName}. Sumi mentioned you'd be coming.
+
+Nika: I have some crucial information about the relic, but first, I need to know if I can trust you.
+
+@choice "\"I'm here to help. Tell me what you know.\"," gosub:.Response_1
+@choice "\"Why all the secrecy?\"," gosub:.Response_2
+@stop
+
+# Common_Dialog
+@char Nika.Frown
+Nika: The relic was last seen in the old archives, but strange things have been happening lately.
+Nika: There's a puzzle protecting it. Only those who prove their skills can get past it.
+
+Nika: I need you to complete a challenge. It’s a simple card game—win, and I'll share what I know.
+@addQuestMessage text:"Head to the archives and retrieve the relic."
+@showUI Btn_Quest
+
+; @goto MiniGame
+; // ----------------------------------------------------------------------
+
+@hidePrinter
+@hideChars
+
+@showUI Btn_Map
+@stop
+
+# Response_1
+@char Nika.Smile_Blush
+Nika: Good. I appreciate straightforwardness.
+Nika: The relic is valuable, and I can’t let it fall into the wrong hands.
+@return
+
+# Response_2
+Nika: Fair question. Let’s just say not everyone wants this relic to be found.
+Nika: If you’re serious, prove it through the challenge.
+@return

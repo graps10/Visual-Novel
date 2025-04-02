@@ -1,0 +1,11 @@
+@back hallway
+@char Player
+
+Player: Nika isn’t here anymore...
+Player: What should I do now?
+
+@addQuestMessage text:"Reflect on your choices and return to Sumi."
+
+; map
+
+@goto Scene_5

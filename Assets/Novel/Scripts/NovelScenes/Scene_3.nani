@@ -1,0 +1,21 @@
+@back bed
+@char Relic_Item
+
+@char Relic_Item.Glow
+Narrator: You found the relic! But something feels off...
+
+@choice "Take the relic" gosub:.Take_Relic
+@choice "Examine it closely first" gosub:.Examine_Relic
+@stop
+
+# Take_Relic
+Narrator: As soon as you touch it, a surge of energy pulses through your hands. You pocket the relic.
+@addQuestMessage text:"Return to Nika with the relic."
+@lock Relic_Item
+
+@hideChars
+@goto Scene_4
+
+# Examine_Relic
+Narrator: The relic hums with energy. It seems ancient, yet... alive?
+@return
