@@ -2,20 +2,23 @@
 @char Relic_Item
 
 @char Relic_Item.Glow
-Narrator: You found the relic! But something feels off...
+Narrator: The relic rests before you, glowing faintly. But something feels… off.
 
-@choice "Take the relic" gosub:.Take_Relic
-@choice "Examine it closely first" gosub:.Examine_Relic
+@showUI Btn_Item
+Narrator: You remember something Nika said—puzzles, security measures. Perhaps there's more to this.
 @stop
 
-# Take_Relic
-Narrator: As soon as you touch it, a surge of energy pulses through your hands. You pocket the relic.
-@addQuestMessage text:"Return to Nika with the relic."
-@lock Relic_Item
+# Analyze_Relic
+@hideUI Btn_Item
+@hide Relic_Item
+Narrator: You take out the amulet from your bag. Its surface reacts to the relic’s energy.
+    
+Narrator: Symbols flash across its surface. Some sort of hidden message? A warning?
+    
+Narrator: Whatever it is, Nika or Sumi might know more.
+@hidePrinter
 
-@hideChars
-@goto Scene_4
+@addQuestMessage text:"Ask Nika about the relic’s true nature."
 
-# Examine_Relic
-Narrator: The relic hums with energy. It seems ancient, yet... alive?
-@return
+@set scene_3_completed=true
+@stop

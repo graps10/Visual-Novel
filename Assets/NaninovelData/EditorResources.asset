@@ -159,14 +159,14 @@ MonoBehaviour:
     - name: Btn_Map
       pathPrefix: UI
       guid: 45e5f16308e077a4c97ce57334b3a5a5
+    - name: Btn_Item
+      pathPrefix: UI
+      guid: 144c6022a2d019043981ae23d27bd756
   - Id: Scripts
     Resources:
     - name: Scene_1
       pathPrefix: Scripts
       guid: b26c23172e0758c4babd6f51431b03e2
-    - name: Scene_1_Empty
-      pathPrefix: Scripts
-      guid: 2d979f011707c354aaa1d1b91bb2a705
     - name: Scene_2
       pathPrefix: Scripts
       guid: 58f8435081d2b204e8a9a0b1243a6a27
@@ -201,6 +201,12 @@ MonoBehaviour:
     - name: Smile_Blush
       pathPrefix: Characters/Nika
       guid: da68e5e6eb870c94f8691d6bda75973c
+    - name: Open
+      pathPrefix: Characters/Nika
+      guid: f2358c760d1d8704ca40f0585249f938
+    - name: Open_Blush
+      pathPrefix: Characters/Nika
+      guid: 97ad32fed3fad3b45829aba3d7d361e8
   - Id: Characters/34ace646-2184-4d33-97f7-56d15ac3b901
     Resources:
     - name: Frown

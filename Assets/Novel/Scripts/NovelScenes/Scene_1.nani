@@ -32,6 +32,8 @@ Sumi: Be careful, {playerName}. Not everyone wants this relic to be found.
 @hideChars
  
 @showUI Btn_Map
+
+@set scene_1_completed=true
 @stop
 ; // ----------------------------------------------------------------------
 

@@ -13,5 +13,11 @@ MonoBehaviour:
   m_Name: CustomVariablesConfiguration
   m_EditorClassIdentifier: 
   PredefinedVariables:
-  - name: mapVisible
+  - name: scene_1_completed
+    value: false
+  - name: scene_2_completed
+    value: false
+  - name: scene_3_completed
+    value: false
+  - name: scene_ending_unlocked
     value: false
