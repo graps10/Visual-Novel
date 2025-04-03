@@ -1,6 +1,4 @@
-
 using Naninovel;
-using Naninovel.UI;
 
 public class QuestLogCloseButton : ScriptableLabeledButton
 {

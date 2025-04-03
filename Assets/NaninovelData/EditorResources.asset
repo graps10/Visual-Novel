@@ -144,15 +144,18 @@ MonoBehaviour:
     - name: ScriptNavigatorUI
       pathPrefix: UI
       guid: 735d6aa767879aa469134858c5b2f0a7
-    - name: Btn_Quest
-      pathPrefix: UI
-      guid: 42f59ebc65bb265408cfdd858b023796
-    - name: QuestLogUI
-      pathPrefix: UI
-      guid: 64b5f662217473a4aa8aae3683dfcc29
     - name: MapUI
       pathPrefix: UI
       guid: 1935ea992967e0648b1cb1124b99534c
+    - name: QuestLogUI
+      pathPrefix: UI
+      guid: 64b5f662217473a4aa8aae3683dfcc29
+    - name: MiniGameUI
+      pathPrefix: UI
+      guid: 4e7de2bbcbce5744fbef90ba46940b44
+    - name: Btn_Quest
+      pathPrefix: UI
+      guid: 42f59ebc65bb265408cfdd858b023796
     - name: Btn_Map
       pathPrefix: UI
       guid: 45e5f16308e077a4c97ce57334b3a5a5

@@ -28,7 +28,7 @@ Sumi: I want you to meet someone who knows more. Her name is Nika, and she's wai
 
 Sumi: Be careful, {playerName}. Not everyone wants this relic to be found.
 
-@hidePrinter
+@hidePrinter 
 @hideChars
  
 @showUI Btn_Map

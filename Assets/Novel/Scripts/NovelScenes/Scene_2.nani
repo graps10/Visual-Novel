@@ -16,6 +16,10 @@ Nika: The relic was last seen in the old archives, but strange things have been 
 Nika: There's a puzzle protecting it. Only those who prove their skills can get past it.
 
 Nika: I need you to complete a challenge. It’s a simple card game—win, and I'll share what I know.
+
+@hidePrinter
+@cardGame pairs:4
+
 @addQuestMessage text:"Head to the archives and retrieve the relic."
 @showUI Btn_Quest
 
