@@ -7,7 +7,7 @@ public class QuestLogManager : IEngineService
     public virtual QuestLogConfiguration Configuration { get; }
     private GameObject questLogObject;
 
-    public QuestLogManager(QuestLogConfiguration config, IResourceProviderManager providersManager)
+    public QuestLogManager(QuestLogConfiguration config)
     {
         Configuration = config;
     }

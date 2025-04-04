@@ -181,15 +181,15 @@ MonoBehaviour:
       guid: db16df504e610914dbb69ace6042bc7a
   - Id: Backgrounds/1bdf1f28-afe0-457a-9a64-7c67e7cdb57c
     Resources:
-    - name: bed
-      pathPrefix: Backgrounds/MainBackground
-      guid: c6c76028c3258b8469240e6c305590b7
-    - name: hallway
-      pathPrefix: Backgrounds/MainBackground
-      guid: ecb25c0940be7b944b801217ab1422d1
     - name: mansion
       pathPrefix: Backgrounds/MainBackground
       guid: 59bb545ff67b04841a819ce16319e7a8
+    - name: hallway
+      pathPrefix: Backgrounds/MainBackground
+      guid: ecb25c0940be7b944b801217ab1422d1
+    - name: archives
+      pathPrefix: Backgrounds/MainBackground
+      guid: 5ff3eb8f75ea5084cbca78de1eeec734
   - Id: Characters/8df2c2a0-02d4-4ca9-a918-5d263cd38e59
     Resources:
     - name: Frown
@@ -218,6 +218,12 @@ MonoBehaviour:
     - name: Smile_Blush
       pathPrefix: Characters/Sumi
       guid: ba44dc663f7093e4d80df24e2533c838
+    - name: Open
+      pathPrefix: Characters/Sumi
+      guid: cb108d1aa1963484fb5337545dbac41a
+    - name: Open_Blush
+      pathPrefix: Characters/Sumi
+      guid: 68d223d067fdc7e4a913bb8fcf6468d6
   - Id: Unlockables
     Resources: []
   - Id: Characters/a0f00a58-dd3b-4a20-9e32-e38d2a107fbc
@@ -227,8 +233,3 @@ MonoBehaviour:
     - name: bg_loop
       pathPrefix: Audio
       guid: f6706f1619c7f63478a2d9fd6cbdf15b
-  - Id: Characters/f92b8a2a-5e72-48b5-b55e-dea4daad6d27
-    Resources:
-    - name: Glow
-      pathPrefix: Characters/Relic_Item
-      guid: dc7a68d82abee344fbfc125b373f13f1

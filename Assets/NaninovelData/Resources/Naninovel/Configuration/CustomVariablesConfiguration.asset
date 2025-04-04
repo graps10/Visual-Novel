@@ -19,5 +19,9 @@ MonoBehaviour:
     value: false
   - name: scene_3_completed
     value: false
+  - name: scene_4_completed
+    value: false
   - name: scene_ending_unlocked
+    value: false
+  - name: can_use_item
     value: false

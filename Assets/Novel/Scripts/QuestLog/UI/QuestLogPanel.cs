@@ -1,65 +1,51 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Naninovel;
 using Naninovel.UI;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class QuestLogPanel : CustomUI, IQuestLogUI, ILocalizableUI
 {
     [Serializable]
     public new class GameState
     {
-        public List<QuestLogMessage> Messages;
+        public List<Quest> ActiveQuests;
+        public List<Quest> CompletedQuests;
     }
 
-    protected virtual QuestLogMessageUI LastMessage => messages.Last?.Value;
-    protected virtual RectTransform MessagesContainer => messagesContainer;
-    protected virtual ScrollRect ScrollRect => scrollRect;
-    protected virtual QuestLogMessageUI MessagePrefab => messagePrefab;
-    protected virtual int Capacity => capacity;
-    protected virtual int SaveCapacity => saveCapacity;
+    [SerializeField] private RectTransform activeQuestsContainer;
+    [SerializeField] private RectTransform completedQuestsContainer;
+    [SerializeField] private QuestLogMessageUI questEntryPrefab;
+    [SerializeField] private QuestLogMessageUI questUpdatePrefab;
 
-    [SerializeField] private RectTransform messagesContainer;
-    [SerializeField] private ScrollRect scrollRect;
-    [SerializeField] private QuestLogMessageUI messagePrefab;
-    [Tooltip("How many messages should the backlog keep.")]
-    [SerializeField] private int capacity = 300;
-    [Tooltip("How many messages should the backlog keep when saving the game.")]
-    [SerializeField] private int saveCapacity = 30;
-    [Tooltip("Whether to add choices summary to the log.")]
-
-    private readonly LinkedList<QuestLogMessageUI> messages = new LinkedList<QuestLogMessageUI>();
-    private readonly Stack<QuestLogMessageUI> messagesPool = new Stack<QuestLogMessageUI>();
-    private readonly List<LocalizableText> formatPool = new List<LocalizableText>();
+    private readonly Dictionary<string, QuestLogMessageUI> questEntries = new Dictionary<string, QuestLogMessageUI>();
+    private readonly Stack<QuestLogMessageUI> entriesPool = new Stack<QuestLogMessageUI>();
     private IInputManager inputManager;
 
-    public virtual void AddMessage(LocalizableText text)
-    {
-        SpawnMessage(new QuestLogMessage(text));
-    }
+    public virtual void AddMessage(LocalizableText text) => SpawnMessage(new QuestLogMessage(text));
 
     public virtual void AppendMessage(LocalizableText text)
     {
-        if (LastMessage) LastMessage.Append(text);
+        if (questEntries.Count > 0)
+        {
+            var lastEntry = questEntries.Values.GetEnumerator().Current;
+            lastEntry?.Append(text);
+        }
     }
 
     public virtual void Clear()
     {
-        foreach (var message in messages)
+        foreach (var entry in questEntries.Values)
         {
-            message.gameObject.SetActive(false);
-            messagesPool.Push(message);
+            entry.gameObject.SetActive(false);
+            entriesPool.Push(entry);
         }
-        messages.Clear();
+        questEntries.Clear();
     }
 
     protected override void Awake()
     {
         base.Awake();
-        this.AssertRequiredObjects(messagesContainer, scrollRect, messagePrefab);
-
         inputManager = Engine.GetService<IInputManager>();
     }
 
@@ -67,7 +53,8 @@ public class QuestLogPanel : CustomUI, IQuestLogUI, ILocalizableUI
     {
         base.OnEnable();
 
-        QuestLogEvents.Instance.OnQuestUpdated += AddMessage;
+        QuestLogEvents.Instance.OnQuestUpdated += UpdateQuestDisplay;
+        QuestLogEvents.Instance.OnQuestCompleted += CompleteQuestDisplay;
 
         if (inputManager.TryGetSampler(InputNames.ShowQuestLog, out var show))
             show.OnStart += Show;
@@ -79,7 +66,8 @@ public class QuestLogPanel : CustomUI, IQuestLogUI, ILocalizableUI
     {
         base.OnDisable();
 
-        QuestLogEvents.Instance.OnQuestUpdated -= AddMessage;
+        QuestLogEvents.Instance.OnQuestUpdated -= UpdateQuestDisplay;
+        QuestLogEvents.Instance.OnQuestCompleted -= CompleteQuestDisplay;
 
         if (inputManager.TryGetSampler(InputNames.ShowQuestLog, out var show))
             show.OnStart -= Show;
@@ -87,82 +75,47 @@ public class QuestLogPanel : CustomUI, IQuestLogUI, ILocalizableUI
             cancel.OnEnd -= Hide;
     }
 
+    private void UpdateQuestDisplay(Quest quest)
+    {
+        if (!questEntries.TryGetValue(quest.Id, out var entry))
+        {
+            entry = GetOrCreateEntry();
+
+            string formattedTitle = quest.Title;
+            entry.Initialize(new QuestLogMessage(formattedTitle));
+
+            entry.transform.SetParent(activeQuestsContainer, false);
+            questEntries.Add(quest.Id, entry);
+        }
+
+        if (quest.Updates.Count == 0) return;
+
+        string latestUpdate = quest.Updates[quest.Updates.Count - 1];
+
+        var updateEntry = Instantiate(questUpdatePrefab, entry.transform);
+        updateEntry.Initialize(new QuestLogMessage(latestUpdate));
+    }
+
+    private void CompleteQuestDisplay(string questId)
+    {
+        if (questEntries.TryGetValue(questId, out var entry))
+        {
+            // entry.gameObject.SetActive(false);
+            // entry.transform.SetParent(completedQuestsContainer, false);
+            Clear();
+        }
+    }
+
+    private QuestLogMessageUI GetOrCreateEntry()
+    {
+        if (entriesPool.Count > 0) return entriesPool.Pop();
+        return Instantiate(questEntryPrefab);
+    }
+
     protected virtual void SpawnMessage(QuestLogMessage message)
     {
-        var messageUI = default(QuestLogMessageUI);
-
-        if (messages.Count > Capacity)
-        {
-            messageUI = messages.First.Value;
-            messageUI.gameObject.SetActive(true);
-            messageUI.transform.SetSiblingIndex(MessagesContainer.childCount - 1);
-            messages.RemoveFirst();
-            messages.AddLast(messageUI);
-        }
-        else
-        {
-            if (messagesPool.Count > 0)
-            {
-                messageUI = messagesPool.Pop();
-                messageUI.gameObject.SetActive(true);
-                messageUI.transform.SetSiblingIndex(MessagesContainer.childCount - 1);
-            }
-            else messageUI = Instantiate(MessagePrefab, MessagesContainer, false);
-
-            messages.AddLast(messageUI);
-        }
-
-        messageUI.Initialize(message);
-    }
-
-    protected override void HandleVisibilityChanged(bool visible)
-    {
-        base.HandleVisibilityChanged(visible);
-
-        MessagesContainer.gameObject.SetActive(visible);
-        if (visible) ScrollToBottom();
-    }
-
-    protected override void SerializeState(GameStateMap stateMap)
-    {
-        base.SerializeState(stateMap);
-        var state = new GameState
-        {
-            Messages = messages.TakeLast(SaveCapacity).Select(m => m.GetState()).ToList()
-        };
-        stateMap.SetState(state);
-    }
-
-    protected override async UniTask DeserializeState(GameStateMap stateMap)
-    {
-        await base.DeserializeState(stateMap);
-
-        Clear();
-
-        var state = stateMap.GetState<GameState>();
-        if (state is null) return;
-
-        if (state.Messages?.Count > 0)
-            foreach (var message in state.Messages)
-                SpawnMessage(message);
-    }
-
-    protected virtual async void ScrollToBottom()
-    {
-        await AsyncUtils.WaitEndOfFrameAsync();
-        LayoutRebuilder.ForceRebuildLayoutImmediate(ScrollRect.content);
-        ScrollRect.verticalNormalizedPosition = 0;
-    }
-
-    protected override GameObject FindFocusObject()
-    {
-        var message = messages.Last;
-        while (message != null)
-        {
-            if (message.Value.GetComponentInChildren<Selectable>() is Selectable selectable)
-                return selectable.gameObject;
-            message = message.Previous;
-        }
-        return null;
+        var entry = GetOrCreateEntry();
+        entry.Initialize(message);
+        entry.transform.SetParent(activeQuestsContainer, false);
     }
 }

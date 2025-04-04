@@ -23,18 +23,24 @@ Nika: I need to be sure you’re capable before I tell you where it is.
 Nika: It’s a simple card game—part skill, part intuition. Win, and I’ll trust you.
 
 @hidePrinter
-@cardGame pairs:4
+@cardGame pairs:5
 
 @char Nika.Smile_Blush
 Nika: Impressive. Maybe you really are the right person for this.
 
-@addQuestMessage text:"Head to the archives and retrieve the relic."
+@char Nika.Open
+Nika: The relic is in the archives. But be careful—if it’s still there, it means no one has solved its puzzle yet.  
+Nika: Something tells me it won’t be as easy as just picking it up.
+
+@char Nika.Smile
+Nika: Good luck, {playerName}. I’ll be waiting.
+
+@addQuestUpdate id:"main_relic_quest" text:"- Head to the archives and retrieve the relic."
+
 @showUI Btn_Quest
 
 @hidePrinter
 @hideChars
-
-@showUI Btn_Map
 
 @set scene_2_completed=true
 @stop

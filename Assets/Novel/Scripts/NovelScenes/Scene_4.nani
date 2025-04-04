@@ -3,7 +3,11 @@
 Player: Nika isn’t here anymore...
 Player: What should I do now?
 
-@addQuestMessage text:"Reflect on your choices and return to Sumi."
+@addQuestUpdate id:"main_relic_quest" text:"- Reflect on your choices and return to Sumi."
 
+@hidePrinter
+
+@set scene_4_completed=true
 @set scene_ending_unlocked=true
+
 @stop
