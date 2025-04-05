@@ -20,6 +20,7 @@ public class QuestLogPanel : CustomUI, IQuestLogUI, ILocalizableUI
 
     private readonly Dictionary<string, QuestLogMessageUI> questEntries = new Dictionary<string, QuestLogMessageUI>();
     private readonly Stack<QuestLogMessageUI> entriesPool = new Stack<QuestLogMessageUI>();
+    private IQuestLogManager questManager;
     private IInputManager inputManager;
 
     public virtual void AddMessage(LocalizableText text) => SpawnMessage(new QuestLogMessage(text));
@@ -47,14 +48,15 @@ public class QuestLogPanel : CustomUI, IQuestLogUI, ILocalizableUI
     {
         base.Awake();
         inputManager = Engine.GetService<IInputManager>();
+        questManager = Engine.GetService<IQuestLogManager>();
     }
 
     protected override void OnEnable()
     {
         base.OnEnable();
 
-        QuestLogEvents.Instance.OnQuestUpdated += UpdateQuestDisplay;
-        QuestLogEvents.Instance.OnQuestCompleted += CompleteQuestDisplay;
+        questManager.OnQuestUpdated += UpdateQuestDisplay;
+        questManager.OnQuestCompleted += CompleteQuestDisplay;
 
         if (inputManager.TryGetSampler(InputNames.ShowQuestLog, out var show))
             show.OnStart += Show;
@@ -66,8 +68,8 @@ public class QuestLogPanel : CustomUI, IQuestLogUI, ILocalizableUI
     {
         base.OnDisable();
 
-        QuestLogEvents.Instance.OnQuestUpdated -= UpdateQuestDisplay;
-        QuestLogEvents.Instance.OnQuestCompleted -= CompleteQuestDisplay;
+        questManager.OnQuestUpdated -= UpdateQuestDisplay;
+        questManager.OnQuestCompleted -= CompleteQuestDisplay;
 
         if (inputManager.TryGetSampler(InputNames.ShowQuestLog, out var show))
             show.OnStart -= Show;
@@ -79,21 +81,16 @@ public class QuestLogPanel : CustomUI, IQuestLogUI, ILocalizableUI
     {
         if (!questEntries.TryGetValue(quest.Id, out var entry))
         {
-            entry = GetOrCreateEntry();
-
-            string formattedTitle = quest.Title;
-            entry.Initialize(new QuestLogMessage(formattedTitle));
-
-            entry.transform.SetParent(activeQuestsContainer, false);
+            entry = Instantiate(questEntryPrefab, activeQuestsContainer);
+            entry.Initialize(new QuestLogMessage(quest.Title));
             questEntries.Add(quest.Id, entry);
         }
 
-        if (quest.Updates.Count == 0) return;
-
-        string latestUpdate = quest.Updates[quest.Updates.Count - 1];
-
-        var updateEntry = Instantiate(questUpdatePrefab, entry.transform);
-        updateEntry.Initialize(new QuestLogMessage(latestUpdate));
+        if (quest.Updates.Count > 0)
+        {
+            var updateEntry = Instantiate(questUpdatePrefab, entry.transform);
+            updateEntry.Initialize(new QuestLogMessage(quest.Updates[^1]));
+        }
     }
 
     private void CompleteQuestDisplay(string questId)

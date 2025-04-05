@@ -162,6 +162,9 @@ MonoBehaviour:
     - name: Btn_Item
       pathPrefix: UI
       guid: 144c6022a2d019043981ae23d27bd756
+    - name: Btn_Ending
+      pathPrefix: UI
+      guid: 04ea20729c8e99642aa265be6c9b8122
   - Id: Scripts
     Resources:
     - name: Scene_1
@@ -232,4 +235,7 @@ MonoBehaviour:
     Resources:
     - name: bg_loop
       pathPrefix: Audio
-      guid: f6706f1619c7f63478a2d9fd6cbdf15b
+      guid: b1d0dc288da92dc4ca19f8d24180a06b
+    - name: quest_update
+      pathPrefix: Audio
+      guid: feb7022ceada1f64982cfec95e11aa57

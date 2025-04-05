@@ -6,10 +6,10 @@ public class AddQuestCommand : Command
     [ParameterAlias("title")] public StringParameter Title;
     [ParameterAlias("id")] public StringParameter QuestId;
 
-    public override UniTask ExecuteAsync(AsyncToken asyncToken = default)
+    public override async UniTask ExecuteAsync(AsyncToken asyncToken = default)
     {
-        QuestLogEvents.Instance?.StartQuest(QuestId, Title);
-        return UniTask.CompletedTask;
+        var questManager = Engine.GetService<IQuestLogManager>();
+        await questManager.StartQuestAsync(QuestId, Title, asyncToken);
     }
 }
 
@@ -19,10 +19,10 @@ public class UpdateQuestCommand : Command
     [ParameterAlias("id")] public StringParameter QuestId;
     [ParameterAlias("text")] public StringParameter Text;
 
-    public override UniTask ExecuteAsync(AsyncToken asyncToken = default)
+    public override async UniTask ExecuteAsync(AsyncToken asyncToken = default)
     {
-        QuestLogEvents.Instance?.UpdateQuest(QuestId, Text);
-        return UniTask.CompletedTask;
+        var questManager = Engine.GetService<IQuestLogManager>();
+        await questManager.UpdateQuestAsync(QuestId, Text, asyncToken);
     }
 }
 
@@ -31,10 +31,10 @@ public class CompleteQuestCommand : Command
 {
     [ParameterAlias("id")] public StringParameter QuestId;
 
-    public override UniTask ExecuteAsync(AsyncToken asyncToken = default)
+    public override async UniTask ExecuteAsync(AsyncToken asyncToken = default)
     {
-        QuestLogEvents.Instance?.CompleteQuest(QuestId);
-        return UniTask.CompletedTask;
+        var questManager = Engine.GetService<IQuestLogManager>();
+        await questManager.CompleteQuestAsync(QuestId, asyncToken);
     }
 }
 
